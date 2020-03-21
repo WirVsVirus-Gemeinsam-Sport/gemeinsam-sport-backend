@@ -12,9 +12,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @RestController
 public class GroupController {
@@ -24,14 +28,14 @@ public class GroupController {
 
     @GetMapping("/group/")
     public Collection<GroupInfo> getAllGroups() {
-        return groupDao.getAll().stream()
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(groupDao.findAll().iterator(), Spliterator.ORDERED), false)
                 .map(group -> new GroupInfo(group.getId(), group.getName(), group.getDescription(), group.getUrl()))
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/group/{id}")
     public GroupInfo getGroup(@PathVariable("id") long id) {
-        Optional<Group> maybeGroup = groupDao.get(id);
+        Optional<Group> maybeGroup = groupDao.findById(id);
         if (maybeGroup.isPresent()) {
             Group group = maybeGroup.get();
             return new GroupInfo(group.getId(), group.getName(), group.getDescription(), group.getUrl());

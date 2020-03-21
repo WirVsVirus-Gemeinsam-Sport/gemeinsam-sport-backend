@@ -1,8 +1,9 @@
 package de.wirvsvirus.gemeinsamsport.backend.Dao;
 
 import de.wirvsvirus.gemeinsamsport.backend.Entity.Group;
-import org.springframework.stereotype.Component;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-@Component
-public class GroupDao extends Dao<Group> {
+@Repository
+public interface GroupDao extends CrudRepository<Group, Long> {
 }
