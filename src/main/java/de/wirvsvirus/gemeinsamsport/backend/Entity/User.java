@@ -1,6 +1,5 @@
 package de.wirvsvirus.gemeinsamsport.backend.Entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -16,20 +15,15 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Entity
-@Table(name = "WVV_Group")
-public class Group extends AbstractEntity {
+@Table(name = "WVV_User")
+public class User extends AbstractEntity {
 
     @NotNull
     @NonNull
     @Length(max = 32)
     @Column(unique = true)
-    private String name;
+    private String username;
 
-    @Length(max = 1024)
-    private String description;
-
-    @NotNull
-    @NonNull
-    @Column(nullable = false, unique = true)
-    private String url;
+    @Length(max = 128)
+    private String token;
 }
