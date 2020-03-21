@@ -16,7 +16,7 @@ public class GroupDao implements Dao<Group> {
 
     @Override
     public Optional<Group> get(long id) {
-        return Optional.of(storage.get(id));
+        return Optional.ofNullable(storage.get(id));
     }
 
     @Override
