@@ -1,18 +1,59 @@
 package de.wirvsvirus.gemeinsamsport.backend.Dao;
 
-import javax.validation.constraints.NotNull;
-import java.util.Collection;
+import de.wirvsvirus.gemeinsamsport.backend.Domain.AbstractEntity;
+import lombok.NonNull;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.transaction.Transactional;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Optional;
 
-public interface Dao<T> {
+public abstract class Dao<E extends AbstractEntity> {
 
-    Optional<T> get(long id);
+    private final Class<E> entityClass;
 
-    Collection<T> getAll();
+    @PersistenceContext
+    protected EntityManager entityManager;
 
-    void save(@NotNull T t);
+    public Dao() {
+        Type type = getClass().getGenericSuperclass();
 
-    void update(@NotNull T t);
+        while (!(type instanceof ParameterizedType) || ((ParameterizedType) type).getRawType() != Dao.class) {
+            if (type instanceof ParameterizedType) {
+                type = ((Class<?>) ((ParameterizedType) type).getRawType()).getGenericSuperclass();
+            } else {
+                type = ((Class<?>) type).getGenericSuperclass();
+            }
+        }
 
-    void delete(@NotNull T t);
+        //noinspection unchecked
+        this.entityClass = (Class<E>) ((ParameterizedType) type).getActualTypeArguments()[0];
+    }
+
+    @Transactional
+    public Optional<E> get(long id) {
+        return Optional.ofNullable(entityManager.find(entityClass, id));
+    }
+
+    @Transactional
+    public List<E> getAll() {
+        CriteriaBuilder  builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<E> query   = builder.createQuery(entityClass);
+        return entityManager.createQuery(query.select(query.from(entityClass))).getResultList();
+    }
+
+    @Transactional
+    public void save(@NonNull E t) {
+        entityManager.persist(t);
+    }
+
+    @Transactional
+    public void delete(@NonNull E t) {
+        entityManager.remove(t);
+    }
 }

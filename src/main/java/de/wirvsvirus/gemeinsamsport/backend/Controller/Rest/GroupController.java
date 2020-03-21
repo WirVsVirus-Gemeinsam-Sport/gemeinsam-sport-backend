@@ -40,7 +40,7 @@ public class GroupController {
 
     @PostMapping("/group/")
     public long putGroup(@RequestBody GroupInfo groupInfo) {
-        Group group = new Group(null, groupInfo.getUrl());
+        Group group = new Group(groupInfo.getUrl());
         groupDao.save(group);
         return group.getId();
     }
