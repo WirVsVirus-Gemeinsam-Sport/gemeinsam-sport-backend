@@ -9,8 +9,11 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -32,4 +35,7 @@ public class Group extends AbstractEntity {
     @NonNull
     @Column(nullable = false, unique = true)
     private String url;
+
+    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
+    private List<Appointment> appointments;
 }
