@@ -5,6 +5,7 @@ import de.wirvsvirus.gemeinsamsport.backend.Dto.AccountRequest;
 import de.wirvsvirus.gemeinsamsport.backend.Entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,9 @@ public class AccountController {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private SecureRandom random = new SecureRandom();
 
     @PostMapping("/register/")
@@ -31,9 +35,10 @@ public class AccountController {
         newUser.setUsername(accountRequest.getUsername());
         byte[] bytes = new byte[64];
         random.nextBytes(bytes);
-        newUser.setToken(Base64Utils.encodeToUrlSafeString(bytes));
+        String token = Base64Utils.encodeToUrlSafeString(bytes);
+        newUser.setToken(passwordEncoder.encode(token));
         userDao.save(newUser);
-        return newUser.getToken();
+        return token;
     }
 }
 
