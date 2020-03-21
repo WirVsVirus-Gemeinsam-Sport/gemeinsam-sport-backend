@@ -1,7 +1,7 @@
 package de.wirvsvirus.gemeinsamsport.backend.Controller.Rest;
 
 import de.wirvsvirus.gemeinsamsport.backend.Dao.GroupDao;
-import de.wirvsvirus.gemeinsamsport.backend.Domain.Group;
+import de.wirvsvirus.gemeinsamsport.backend.Entity.Group;
 import de.wirvsvirus.gemeinsamsport.backend.Dto.GroupInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,22 +25,26 @@ public class GroupController {
     @GetMapping("/group/")
     public Collection<GroupInfo> getAllGroups() {
         return groupDao.getAll().stream()
-                .map(group -> new GroupInfo(group.getId(), group.getUrl()))
+                .map(group -> new GroupInfo(group.getId(), group.getName(), group.getDescription(), group.getUrl()))
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/group/{id}")
     public GroupInfo getGroup(@PathVariable("id") long id) {
-        Optional<Group> group = groupDao.get(id);
-        if (group.isPresent()) {
-            return new GroupInfo(id, group.get().getUrl());
+        Optional<Group> maybeGroup = groupDao.get(id);
+        if (maybeGroup.isPresent()) {
+            Group group = maybeGroup.get();
+            return new GroupInfo(group.getId(), group.getName(), group.getDescription(), group.getUrl());
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This group does not exist");
     }
 
     @PostMapping("/group/")
     public long putGroup(@RequestBody GroupInfo groupInfo) {
-        Group group = new Group(groupInfo.getUrl());
+        Group group = new Group();
+        group.setName(groupInfo.getName());
+        group.setDescription(groupInfo.getDescription());
+        group.setUrl(groupInfo.getUrl());
         groupDao.save(group);
         return group.getId();
     }

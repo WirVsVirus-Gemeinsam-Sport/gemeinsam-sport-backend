@@ -1,4 +1,4 @@
-package de.wirvsvirus.gemeinsamsport.backend.Domain;
+package de.wirvsvirus.gemeinsamsport.backend.Entity;
 
 import lombok.Data;
 

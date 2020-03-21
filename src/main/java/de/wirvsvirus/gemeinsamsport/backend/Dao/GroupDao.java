@@ -1,6 +1,6 @@
 package de.wirvsvirus.gemeinsamsport.backend.Dao;
 
-import de.wirvsvirus.gemeinsamsport.backend.Domain.Group;
+import de.wirvsvirus.gemeinsamsport.backend.Entity.Group;
 import org.springframework.stereotype.Component;
 
 @Component

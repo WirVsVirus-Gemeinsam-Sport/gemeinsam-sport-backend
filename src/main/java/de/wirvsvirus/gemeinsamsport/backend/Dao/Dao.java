@@ -1,6 +1,6 @@
 package de.wirvsvirus.gemeinsamsport.backend.Dao;
 
-import de.wirvsvirus.gemeinsamsport.backend.Domain.AbstractEntity;
+import de.wirvsvirus.gemeinsamsport.backend.Entity.AbstractEntity;
 import lombok.NonNull;
 
 import javax.persistence.EntityManager;
