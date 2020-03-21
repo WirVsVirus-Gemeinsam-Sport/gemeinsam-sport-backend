@@ -24,7 +24,7 @@ jobs:
       run: mvn -B package --file pom.xml
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag latest --build-arg JAR_FILE=target/*.jar
+      run: docker build . --file Dockerfile --tag image --build-arg JAR_FILE=target/*.jar
 
     - name: Log into registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
