@@ -12,13 +12,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 public class GroupController {
 
     @Autowired
     private GroupDao groupDao;
+
+    @GetMapping("/group/")
+    public Collection<GroupInfo> getAllGroups() {
+        return groupDao.getAll().stream()
+                .map(group -> new GroupInfo(group.getId(), group.getUrl()))
+                .collect(Collectors.toList());
+    }
 
     @GetMapping("/group/{id}")
     public GroupInfo getGroup(@PathVariable("id") long id) {
