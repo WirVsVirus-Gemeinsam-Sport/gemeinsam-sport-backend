@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -59,6 +60,20 @@ public class GroupController {
         Optional<Group> maybeGroup = groupDao.findById(id);
         if (maybeGroup.isPresent()) {
             groupDao.delete(maybeGroup.get());
+            return;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This group does not exist");
+    }
+
+    @PutMapping("/group/{id}")
+    public void editGroup(@PathVariable("id") long id, @RequestBody GroupInfo groupInfo) {
+        Optional<Group> maybeGroup = groupDao.findById(id);
+        if (maybeGroup.isPresent()) {
+            Group group = maybeGroup.get();
+            group.setName(groupInfo.getName());
+            group.setDescription(groupInfo.getDescription());
+            group.setUrl(groupInfo.getUrl());
+            groupDao.save(group);
             return;
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This group does not exist");

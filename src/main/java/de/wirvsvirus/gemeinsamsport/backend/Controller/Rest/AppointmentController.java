@@ -3,14 +3,17 @@ package de.wirvsvirus.gemeinsamsport.backend.Controller.Rest;
 import de.wirvsvirus.gemeinsamsport.backend.Dao.AppointmentDao;
 import de.wirvsvirus.gemeinsamsport.backend.Dao.GroupDao;
 import de.wirvsvirus.gemeinsamsport.backend.Dto.AppointmentInfo;
+import de.wirvsvirus.gemeinsamsport.backend.Dto.WorkoutStepInfo;
 import de.wirvsvirus.gemeinsamsport.backend.Entity.Appointment;
 import de.wirvsvirus.gemeinsamsport.backend.Entity.Group;
+import de.wirvsvirus.gemeinsamsport.backend.Entity.WorkoutStep;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -72,5 +75,17 @@ public class AppointmentController {
             return;
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This appointment does not exist");
+    }
+
+    @PutMapping("/group/{groupId}/appointments/{appointmentId}")
+    public void editAppointment(@PathVariable("groupId") long groupId, @PathVariable("appointmentId") long appointmentId, @RequestBody AppointmentInfo appointmentInfo) {
+        Optional<Appointment> maybeAppointment = appointmentDao.findById(appointmentId);
+        if (maybeAppointment.isPresent() && groupId == maybeAppointment.get().getGroup().getId()) {
+            Appointment appointment = maybeAppointment.get();
+            appointment.setDate(appointmentInfo.getDate());
+            appointmentDao.save(appointment);
+            return;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This workout step does not exist");
     }
 }
