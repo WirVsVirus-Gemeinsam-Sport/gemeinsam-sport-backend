@@ -31,7 +31,7 @@ public class GroupController {
     @GetMapping("/group/")
     public Collection<GroupInfo> getAllGroups() {
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(groupDao.findAll().iterator(), Spliterator.ORDERED), false)
-                .map(group -> new GroupInfo(group.getId(), group.getName(), group.getDescription(), group.getUrl()))
+                .map(group -> new GroupInfo(group.getId(),group.getCapacity(), group.getName(), group.getDescription(), group.getUrl()))
                 .collect(Collectors.toList());
     }
 
@@ -40,7 +40,7 @@ public class GroupController {
         Optional<Group> maybeGroup = groupDao.findById(id);
         if (maybeGroup.isPresent()) {
             Group group = maybeGroup.get();
-            return new GroupInfo(group.getId(), group.getName(), group.getDescription(), group.getUrl());
+            return new GroupInfo(group.getId(), group.getCapacity(),group.getName(), group.getDescription(), group.getUrl());
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This group does not exist");
     }
@@ -49,6 +49,7 @@ public class GroupController {
     public long createGroup(@RequestBody GroupInfo groupInfo) {
         Group group = new Group();
         group.setName(groupInfo.getName());
+        group.setCapacity(groupInfo.getCapacity());
         group.setDescription(groupInfo.getDescription());
         group.setUrl(groupInfo.getUrl());
         groupDao.save(group);
@@ -71,6 +72,7 @@ public class GroupController {
         if (maybeGroup.isPresent()) {
             Group group = maybeGroup.get();
             group.setName(groupInfo.getName());
+            group.setCapacity(groupInfo.getCapacity());
             group.setDescription(groupInfo.getDescription());
             group.setUrl(groupInfo.getUrl());
             groupDao.save(group);

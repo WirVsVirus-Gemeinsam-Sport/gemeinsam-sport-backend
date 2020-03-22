@@ -9,7 +9,7 @@ import lombok.NonNull;
 public class GroupInfo {
 
     private long id;
-
+    private int capacity;
     @NonNull
     private String name;
 
