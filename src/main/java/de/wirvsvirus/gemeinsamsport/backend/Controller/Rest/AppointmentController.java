@@ -7,6 +7,7 @@ import de.wirvsvirus.gemeinsamsport.backend.Entity.Appointment;
 import de.wirvsvirus.gemeinsamsport.backend.Entity.Group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,5 +62,15 @@ public class AppointmentController {
             return appointment.getId();
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This group does not exist");
+    }
+
+    @DeleteMapping("/group/{groupId}/appointments/{appointmentId}")
+    public void deleteAppointment(@PathVariable("groupId") long groupId, @PathVariable("appointmentId") long appointmentId) {
+        Optional<Appointment> maybeAppointment = appointmentDao.findById(appointmentId);
+        if (maybeAppointment.isPresent() && groupId == maybeAppointment.get().getGroup().getId()) {
+            appointmentDao.delete(maybeAppointment.get());
+            return;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This appointment does not exist");
     }
 }

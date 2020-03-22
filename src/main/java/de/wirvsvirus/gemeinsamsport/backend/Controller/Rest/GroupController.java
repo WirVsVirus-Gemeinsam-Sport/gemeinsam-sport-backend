@@ -5,6 +5,7 @@ import de.wirvsvirus.gemeinsamsport.backend.Entity.Group;
 import de.wirvsvirus.gemeinsamsport.backend.Dto.GroupInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,5 +52,15 @@ public class GroupController {
         group.setUrl(groupInfo.getUrl());
         groupDao.save(group);
         return group.getId();
+    }
+
+    @DeleteMapping("/group/{id}")
+    public void deleteGroup(@PathVariable("id") long id) {
+        Optional<Group> maybeGroup = groupDao.findById(id);
+        if (maybeGroup.isPresent()) {
+            groupDao.delete(maybeGroup.get());
+            return;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This group does not exist");
     }
 }

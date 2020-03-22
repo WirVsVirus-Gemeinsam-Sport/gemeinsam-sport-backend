@@ -3,10 +3,11 @@ package de.wirvsvirus.gemeinsamsport.backend.Controller.Rest;
 import de.wirvsvirus.gemeinsamsport.backend.Dao.GroupDao;
 import de.wirvsvirus.gemeinsamsport.backend.Dao.WorkoutStepDao;
 import de.wirvsvirus.gemeinsamsport.backend.Dto.WorkoutStepInfo;
-import de.wirvsvirus.gemeinsamsport.backend.Entity.Group;
 import de.wirvsvirus.gemeinsamsport.backend.Entity.WorkoutStep;
+import de.wirvsvirus.gemeinsamsport.backend.Entity.Group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,5 +63,15 @@ public class WorkoutStepController {
             return workoutStep.getId();
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This group does not exist");
+    }
+
+    @DeleteMapping("/group/{groupId}/workout/steps/{workoutStepId}")
+    public void deleteWorkoutStep(@PathVariable("groupId") long groupId, @PathVariable("workoutStepId") long workoutStepId) {
+        Optional<WorkoutStep> maybeWorkoutStep = workoutStepDao.findById(workoutStepId);
+        if (maybeWorkoutStep.isPresent() && groupId == maybeWorkoutStep.get().getGroup().getId()) {
+            workoutStepDao.delete(maybeWorkoutStep.get());
+            return;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This workout step does not exist");
     }
 }
