@@ -35,9 +35,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/actuator/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/group/**").authenticated()
-                .antMatchers(HttpMethod.PUT, "/group/**").authenticated()
-                .antMatchers(HttpMethod.DELETE, "/group/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/group/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/group/**").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/group/**").permitAll()
                 .anyRequest().permitAll()
                 .and().httpBasic().and().csrf().disable();
         http.headers().frameOptions().disable();
