@@ -51,7 +51,7 @@ public class AppointmentController {
     }
 
     @PostMapping("/group/{groupId}/appointments/")
-    public long postAppointment(@PathVariable("groupId") long groupId, @RequestBody AppointmentInfo appointmentInfo) {
+    public long createAppointment(@PathVariable("groupId") long groupId, @RequestBody AppointmentInfo appointmentInfo) {
         Optional<Group> maybeGroup = groupDao.findById(groupId);
         if (maybeGroup.isPresent()) {
             Appointment appointment = new Appointment();

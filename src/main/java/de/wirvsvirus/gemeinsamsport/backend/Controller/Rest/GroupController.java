@@ -44,7 +44,7 @@ public class GroupController {
     }
 
     @PostMapping("/group/")
-    public long postGroup(@RequestBody GroupInfo groupInfo) {
+    public long createGroup(@RequestBody GroupInfo groupInfo) {
         Group group = new Group();
         group.setName(groupInfo.getName());
         group.setDescription(groupInfo.getDescription());

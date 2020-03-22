@@ -38,4 +38,7 @@ public class Group extends AbstractEntity {
 
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
     private List<Appointment> appointments;
+
+    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
+    private List<WorkoutStep> workoutSteps;
 }
